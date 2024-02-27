@@ -1,0 +1,297 @@
+openapi: 3.0.3
+info:
+  title: API Client v1 - OpenAPI 3.0
+  description: |-
+    Client API for Microservices Bootcamp50
+    
+    Developer : Joaquin Cunorana Jimenez
+  version: 1.0.0
+tags:
+  - name: client
+    description: Endpoint makes customer information available
+paths:
+  /client:
+    put:
+      tags:
+        - client
+      summary: Update an existing client
+      description: Update an existing client by Id
+      operationId: updateClient
+      requestBody:
+        description: Update an existent client
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Client not found
+        '405':
+          description: Validation exception
+    post:
+      tags:
+        - client
+      summary: Add a new client
+      description: Add a new client
+      operationId: addClient
+      requestBody:
+        description: Create a new client
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '405':
+          description: Invalid input
+  /client/findByStatus:
+    get:
+      tags:
+        - client
+      summary: Finds client by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: findClientByStatus
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: active
+            enum:
+              - active
+              - inactive
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid status value
+  /client/findByTags:
+    get:
+      tags:
+        - client
+      summary: Finds client by tags
+      description: Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+      operationId: findClientByTags
+      parameters:
+        - name: tags
+          in: query
+          description: Tags to filter by
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid tag value
+  /client/{clientId}:
+    get:
+      tags:
+        - client
+      summary: Find client by ID
+      description: Returns a single client
+      operationId: getClientById
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Client not found
+    post:
+      tags:
+        - client
+      summary: Updates a client with form data
+      description: ''
+      operationId: updateClientWithForm
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: query
+          description: Name of client that needs to be updated
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of client that needs to be updated
+          schema:
+            type: string
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - client
+      summary: Deletes a client
+      description: delete a client
+      operationId: deleteClient
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: clientId
+          in: path
+          description: Client id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid client value
+components:
+  schemas:
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: tag
+    Client:
+      type: object
+      properties:
+        clientid:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: Joaquin
+        lastName:
+          type: string
+          example: Cunorana
+        motherSurname:
+          type: string
+          example: Jimenez
+        email:
+          type: string
+          example: joa@email.com
+        password:
+          type: string
+          example: '12345'
+        phone:
+          type: string
+          example: '12345'
+        status:
+          type: string
+          description: client status
+          enum:
+            - active
+            - inactive
+        tags:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Tag'
+      xml:
+        name: client
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
